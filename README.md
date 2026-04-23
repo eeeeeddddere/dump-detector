@@ -1,0 +1,1 @@
+# dump-detector\n\nScaffold branch — implementation in PR #1.\n
