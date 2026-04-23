@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dump Detector — Gate.io Futures</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='48' font-size='48'%3E%F0%9F%94%BB%3C/text%3E%3C/svg%3E" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-mark">▼</span>
+        <div>
+          <h1>Dump Detector</h1>
+          <p class="subtitle">Find coins before they dump — Gate.io USDT perpetual futures.</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <span id="last-updated" class="muted">not scanned yet</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="controls card">
+      <div class="control-row">
+        <label class="control">
+          <span>Timeframe</span>
+          <select id="timeframe">
+            <option value="15m" selected>15m (priority)</option>
+            <option value="1h">1h</option>
+            <option value="all">All</option>
+          </select>
+        </label>
+
+        <label class="control">
+          <span>Min 24h volume (USDT)</span>
+          <input id="min-volume" type="number" min="0" step="50000" value="500000" />
+        </label>
+
+        <label class="control">
+          <span>Sort by</span>
+          <select id="sort">
+            <option value="score" selected>Score (high → low)</option>
+            <option value="volume">Volume (high → low)</option>
+            <option value="change">24h change (low → high)</option>
+          </select>
+        </label>
+
+        <label class="control toggle">
+          <input id="auto-refresh" type="checkbox" />
+          <span>Auto-refresh every</span>
+          <select id="refresh-interval">
+            <option value="30">30s</option>
+            <option value="60" selected>60s</option>
+          </select>
+        </label>
+
+        <label class="control toggle">
+          <input id="demo-mode" type="checkbox" checked />
+          <span>Demo mode</span>
+        </label>
+      </div>
+
+      <div class="control-row actions">
+        <button id="scan-btn" type="button" class="primary">Искать дампы</button>
+        <button id="refresh-btn" type="button" class="ghost" disabled>Refresh</button>
+        <span id="status" class="status muted">Ready. Demo mode is ON — click “Искать дампы” for instant sample signals.</span>
+      </div>
+    </section>
+
+    <section class="legend">
+      <span class="sev sev-high">🔴 80–100 HIGH</span>
+      <span class="sev sev-medium">🟠 60–79 MEDIUM</span>
+      <span class="sev muted">&lt;60 ignored</span>
+      <span class="sep">·</span>
+      <span id="summary" class="muted"></span>
+    </section>
+
+    <section id="signals" class="signals"></section>
+
+    <template id="signal-template">
+      <article class="signal card">
+        <header class="signal-head">
+          <div class="signal-head-left">
+            <h2 class="symbol"></h2>
+            <span class="timeframe-badge"></span>
+          </div>
+          <div class="score-badge">
+            <span class="score"></span>
+            <span class="severity"></span>
+          </div>
+        </header>
+        <div class="signal-meta">
+          <span class="signal-type"></span>
+          <span class="sep">·</span>
+          <span class="price"></span>
+          <span class="sep">·</span>
+          <span class="change"></span>
+          <span class="sep">·</span>
+          <span class="volume"></span>
+        </div>
+        <p class="reason"></p>
+        <div class="breakdown"></div>
+        <div class="chart-toggle">
+          <button type="button" class="ghost small">Show chart</button>
+        </div>
+        <div class="chart-host" hidden></div>
+      </article>
+    </template>
+
+    <section id="empty-state" class="empty-state card" hidden>
+      <h3>No dump signals right now</h3>
+      <p class="muted">
+        Nothing scored ≥ 60 with the current filters. Try lowering the volume threshold,
+        switching the timeframe, or enabling demo mode.
+      </p>
+    </section>
+  </main>
+
+  <footer class="app-footer muted">
+    <span>Data: <a href="https://www.gate.io/docs/developers/apiv4/#futures" target="_blank" rel="noreferrer">Gate.io API v4</a></span>
+    <span class="sep">·</span>
+    <span>Not financial advice.</span>
+  </footer>
+
+  <script src="https://s3.tradingview.com/tv.js"></script>
+  <script src="/static/app.js" defer></script>
+</body>
+</html>
